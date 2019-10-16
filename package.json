@@ -1,0 +1,25 @@
+{
+  "name": "advanced_rest",
+  "version": "0.1.0",
+  "description": "rest api with some advanced things! for practise..",
+  "main": "index.ts",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Martin Merta",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.1",
+    "@types/jest": "^24.0.19",
+    "@types/node": "^12.11.1",
+    "@types/sinon": "^7.5.0",
+    "@types/supertest": "^2.0.8",
+    "express": "^4.17.1",
+    "helmet": "^3.21.1",
+    "jest": "^24.9.0",
+    "sinon": "^7.5.0",
+    "supertest": "^4.0.2",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.4"
+  }
+}
