@@ -9,11 +9,13 @@
   "author": "Martin Merta",
   "license": "ISC",
   "dependencies": {
+    "@types/body-parser": "^1.17.1",
     "@types/express": "^4.17.1",
     "@types/jest": "^24.0.19",
     "@types/node": "^12.11.1",
     "@types/sinon": "^7.5.0",
     "@types/supertest": "^2.0.8",
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "helmet": "^3.21.1",
     "jest": "^24.9.0",
