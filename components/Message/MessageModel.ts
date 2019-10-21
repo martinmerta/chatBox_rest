@@ -1,7 +1,8 @@
-import {Schema} from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
 
 const MessageSchema = new Schema({
     owner:Schema.Types.ObjectId,
-    message:Schema.Types.String
+    message:String
 })
 
+export const messageSchema = mongoose.model('Messages', MessageSchema)
