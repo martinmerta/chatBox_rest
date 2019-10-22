@@ -12,11 +12,23 @@ export const getMessages = async (
     return res.status(400).json({ msg: err });
   }
 };
-export const postMessages = (
+export const postMessages = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {};
+) => {
+  try {
+    const { owner, message } = req.body;
+    const newMessage = await new messageSchema({
+      owner,
+      message
+    });
+    await newMessage.save();
+    return res.status(201).json({ msg: "Message succesfully created" });
+  } catch (err) {
+    return res.status(400).json({ msg: err });
+  }
+};
 export const putMessages = (
   req: Request,
   res: Response,
