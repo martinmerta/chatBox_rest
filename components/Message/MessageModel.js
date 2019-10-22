@@ -7,9 +7,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = __importStar(require("mongoose"));
-var MessageSchema = new mongoose_1.Schema({
-    owner: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Users' },
-    messages: [String]
+const mongoose_1 = __importStar(require("mongoose"));
+const MessageSchema = new mongoose_1.Schema({
+    owner: { type: mongoose_1.Schema.Types.ObjectId, ref: "Users" },
+    message: String
 });
-exports.messageSchema = mongoose_1.default.model('Messages', MessageSchema);
+exports.messageSchema = mongoose_1.default.model("Messages", MessageSchema);
