@@ -4,7 +4,8 @@
   "description": "rest api with some advanced things! for practise..",
   "main": "index.ts",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "ts-node ./bin/www"
   },
   "author": "Martin Merta",
   "license": "ISC",

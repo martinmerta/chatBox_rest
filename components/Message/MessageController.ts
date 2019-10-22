@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { messageSchema } from "./MessageModel";
+import { Request, Response, NextFunction } from 'express';
+import { messageSchema } from './MessageModel';
 export const getMessages = async (
   req: Request,
   res: Response,
@@ -19,12 +19,13 @@ export const postMessages = async (
 ) => {
   try {
     const { owner, message } = req.body;
+    // owner has to be stored in req object when we create a token
     const newMessage = await new messageSchema({
       owner,
       message
     });
     await newMessage.save();
-    return res.status(201).json({ msg: "Message succesfully created" });
+    return res.status(201).json({ msg: 'Message succesfully created' });
   } catch (err) {
     return res.status(400).json({ msg: err });
   }
