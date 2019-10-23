@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { messageSchema } from './MessageModel';
+import { Request, Response, NextFunction } from "express";
+import { messageSchema } from "./MessageModel";
 export const getMessages = async (
   req: Request,
   res: Response,
@@ -12,7 +12,7 @@ export const getMessages = async (
     return res.status(400).json({ msg: err });
   }
 };
-export const postMessages = async (
+export const postMessage = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -25,18 +25,34 @@ export const postMessages = async (
       message
     });
     await newMessage.save();
-    return res.status(201).json({ msg: 'Message succesfully created' });
+    return res.status(201).json({ msg: "Message succesfully created" });
   } catch (err) {
     return res.status(400).json({ msg: err });
   }
 };
-export const putMessages = (
+export const putMessage = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {};
-export const deleteMessages = (
+) => {
+  const { owner, message, _id } = req.body;
+  try {
+    await messageSchema.findByIdAndUpdate({ _id }, { message });
+    res.status(200).json({ msg: "Message updated!" });
+  } catch (err) {
+    return res.status(401).json({ msg: err });
+  }
+};
+export const deleteMessage = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {};
+) => {
+  const { _id } = req.body;
+  try {
+    await messageSchema.findOneAndRemove({ _id });
+    return res.status(200).json({ msg: "Sucesfully deleted!" });
+  } catch (err) {
+    return res.status(400).json({ msg: "deleted!!" });
+  }
+};
