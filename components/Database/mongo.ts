@@ -8,7 +8,8 @@ export const connectToDB = async (
   try {
     await mongoose.connect(url, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useFindAndModify: false
     });
     return app.listen(port);
   } catch (err) {

@@ -8,5 +8,5 @@ const UserController_1 = require("./UserController");
 exports.router = express_1.default.Router();
 exports.router.get('/user', UserController_1.getUser);
 exports.router.post('/user', UserController_1.postUser);
-exports.router.put('/user/:id', UserController_1.putUser);
+exports.router.put('/user', UserController_1.putUser);
 exports.router.delete('/user/:id', UserController_1.deleteUser);

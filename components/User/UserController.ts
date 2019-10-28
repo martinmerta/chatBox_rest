@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { userSchema } from "./UserModel";
+import { Request, Response, NextFunction } from 'express';
+import { userSchema } from './UserModel';
+
 export const getUser = (req: Request, res: Response, next: NextFunction) => {};
 
 export const postUser = async (
@@ -17,9 +18,9 @@ export const postUser = async (
     ) {
       const user = await new userSchema({ email, password });
       await user.save();
-      return res.status(201).json({ msg: "User sucesfully created!" });
+      return res.status(201).json({ msg: 'User sucesfully created!' });
     } else {
-      return res.status(400).json({ msg: "Invalid Input!" });
+      return res.status(400).json({ msg: 'Invalid Input!' });
     }
   } catch (err) {
     return res.status(400).json({ msg: err });
@@ -32,14 +33,19 @@ export const putUser = async (
 ) => {
   const { email, oldPassword, newPassword, repeatNewPassword } = req.body;
   try {
-    if (email && oldPassword && newPassword && repeatNewPassword) {
+    const user = await userSchema.findOne({ email });
+    if (
+      user &&
+      user['password'] === oldPassword &&
+      newPassword === repeatNewPassword
+    ) {
       await userSchema.findOneAndUpdate({ email }, { password: newPassword });
-      return res.status(201).json({ msg: "Password sucessfully changed!" });
+      return res.status(201).json({ msg: 'Password sucessfully changed!' });
     } else {
-      return res.status(400).json({ msg: "Invalid input!" });
+      return res.status(400).json({ msg: 'Invalid input!' });
     }
   } catch (err) {
-    return res.status(400).json({ msg: err });
+    return res.status(400).json({ msg: 'Something gone wrong..' });
   }
 };
 export const deleteUser = async (
@@ -52,11 +58,11 @@ export const deleteUser = async (
     const user = await userSchema.findOne({ email, password });
     if (user !== null) {
       await userSchema.findOneAndDelete({ email });
-      return res.status(200).json({ msg: "User Deleted" });
+      return res.status(200).json({ msg: 'User Deleted' });
     } else {
       return res
         .status(401)
-        .json({ msg: ` Ypu don't have permission to delete user!` });
+        .json({ msg: ` You don't have permission to delete user!` });
     }
   } catch (err) {
     return res.status(400).json({ msg: err });
