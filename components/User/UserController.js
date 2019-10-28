@@ -49,9 +49,12 @@ exports.putUser = (req, res, next) => __awaiter(this, void 0, void 0, function* 
 });
 exports.deleteUser = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     const { email, password } = req.body;
+    const { id } = req.params;
     try {
-        const user = yield UserModel_1.userSchema.findOne({ email, password });
-        if (user !== null) {
+        const user = yield UserModel_1.userSchema.findOne({ _id: id });
+        if (user !== null &&
+            user['email'] === email &&
+            user['password'] === password) {
             yield UserModel_1.userSchema.findOneAndDelete({ email });
             return res.status(200).json({ msg: 'User Deleted' });
         }

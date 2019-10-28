@@ -54,9 +54,14 @@ export const deleteUser = async (
   next: NextFunction
 ) => {
   const { email, password } = req.body;
+  const { id } = req.params;
   try {
-    const user = await userSchema.findOne({ email, password });
-    if (user !== null) {
+    const user = await userSchema.findOne({ _id: id });
+    if (
+      user !== null &&
+      user['email'] === email &&
+      user['password'] === password
+    ) {
       await userSchema.findOneAndDelete({ email });
       return res.status(200).json({ msg: 'User Deleted' });
     } else {
