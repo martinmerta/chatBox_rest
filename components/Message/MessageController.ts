@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { messageSchema } from "./MessageModel";
+import { userSchema } from "../User/UserModel";
+import { IRequestWithUser } from "../Interfaces";
 export const getMessages = async (
   req: Request,
   res: Response,
@@ -13,13 +15,13 @@ export const getMessages = async (
   }
 };
 export const postMessage = async (
-  req: Request,
+  req: IRequestWithUser,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { owner, message } = req.body;
-    // owner has to be stored in req object when we create a token
+    const { message } = req.body;
+    const { owner } = req.user;
     const newMessage = await new messageSchema({
       owner,
       message
