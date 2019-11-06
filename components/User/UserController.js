@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserModel_1 = require("./UserModel");
+const jsonwebtoken_1 = require("jsonwebtoken");
 exports.getUser = (req, res, next) => { };
 exports.postUser = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     const { email, password, repeatPassword } = req.body;
@@ -27,6 +28,24 @@ exports.postUser = (req, res, next) => __awaiter(this, void 0, void 0, function*
     }
     catch (err) {
         return res.status(400).json({ msg: err });
+    }
+});
+exports.logInUser = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    let loadedUser;
+    try {
+        const user = UserModel_1.userSchema.findOne({ email });
+        if (user && user['password'] === password) {
+            loadedUser = user;
+        }
+        else {
+            throw new Error('Wrong email or password');
+        }
+        const token = jsonwebtoken_1.sign({ email: loadedUser.email, userId: loadedUser._id.toString() }, 'superSecret', { expiresIn: '1h' });
+        res.status(200).json({ token, userId: loadedUser._id.toString() });
+    }
+    catch (err) {
+        res.status(401).json(err);
     }
 });
 exports.putUser = (req, res, next) => __awaiter(this, void 0, void 0, function* () {

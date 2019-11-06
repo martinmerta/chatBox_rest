@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { userSchema } from './UserModel';
+import { sign } from 'jsonwebtoken';
 
 export const getUser = (req: Request, res: Response, next: NextFunction) => {};
 
@@ -26,6 +27,32 @@ export const postUser = async (
     return res.status(400).json({ msg: err });
   }
 };
+
+export const logInUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email, password } = req.body;
+  let loadedUser;
+  try {
+    const user = userSchema.findOne({ email });
+    if (user && user['password'] === password) {
+      loadedUser = user;
+    } else {
+      throw new Error('Wrong email or password');
+    }
+    const token = sign(
+      { email: loadedUser.email, userId: loadedUser._id.toString() },
+      'superSecret',
+      { expiresIn: '1h' }
+    );
+    res.status(200).json({ token, userId: loadedUser._id.toString() });
+  } catch (err) {
+    res.status(401).json(err);
+  }
+};
+
 export const putUser = async (
   req: Request,
   res: Response,

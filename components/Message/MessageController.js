@@ -20,24 +20,25 @@ exports.getMessages = (req, res, next) => __awaiter(this, void 0, void 0, functi
 });
 exports.postMessage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const { owner, message } = req.body;
-        // owner has to be stored in req object when we create a token
+        const { message } = req.body;
+        const { owner } = req.user;
         const newMessage = yield new MessageModel_1.messageSchema({
             owner,
             message
         });
         yield newMessage.save();
-        return res.status(201).json({ msg: "Message succesfully created" });
+        return res.status(201).json({ msg: 'Message succesfully created' });
     }
     catch (err) {
         return res.status(400).json({ msg: err });
     }
 });
 exports.putMessage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-    const { owner, message, _id } = req.body;
+    const { message, _id } = req.body;
+    const user = req.user;
     try {
-        yield MessageModel_1.messageSchema.findByIdAndUpdate({ _id }, { message });
-        res.status(200).json({ msg: "Message updated!" });
+        yield MessageModel_1.messageSchema.findByIdAndUpdate({ _id, owner: user }, { message });
+        res.status(200).json({ msg: 'Message updated!' });
     }
     catch (err) {
         return res.status(401).json({ msg: err });
@@ -45,11 +46,12 @@ exports.putMessage = (req, res, next) => __awaiter(this, void 0, void 0, functio
 });
 exports.deleteMessage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     const { _id } = req.body;
+    const user = req.user;
     try {
-        yield MessageModel_1.messageSchema.findOneAndRemove({ _id });
-        return res.status(200).json({ msg: "Sucesfully deleted!" });
+        yield MessageModel_1.messageSchema.findOneAndRemove({ _id, owner: user });
+        return res.status(200).json({ msg: 'Sucesfully deleted!' });
     }
     catch (err) {
-        return res.status(400).json({ msg: "deleted!!" });
+        return res.status(400).json({ msg: 'deleted!!' });
     }
 });
