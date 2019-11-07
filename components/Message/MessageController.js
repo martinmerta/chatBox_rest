@@ -21,9 +21,9 @@ exports.getMessages = (req, res, next) => __awaiter(this, void 0, void 0, functi
 exports.postMessage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
         const { message } = req.body;
-        const { owner } = req.user;
+        const userId = req.user;
         const newMessage = yield new MessageModel_1.messageSchema({
-            owner,
+            userId,
             message
         });
         yield newMessage.save();
@@ -35,9 +35,10 @@ exports.postMessage = (req, res, next) => __awaiter(this, void 0, void 0, functi
 });
 exports.putMessage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     const { message, _id } = req.body;
-    const user = req.user;
+    const userId = req.user;
+    console.log(message, _id, userId);
     try {
-        yield MessageModel_1.messageSchema.findByIdAndUpdate({ _id, owner: user }, { message });
+        yield MessageModel_1.messageSchema.findByIdAndUpdate({ _id, userId }, { message });
         res.status(200).json({ msg: 'Message updated!' });
     }
     catch (err) {
@@ -46,9 +47,10 @@ exports.putMessage = (req, res, next) => __awaiter(this, void 0, void 0, functio
 });
 exports.deleteMessage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     const { _id } = req.body;
-    const user = req.user;
+    const userId = req.user;
+    console.log(_id, user);
     try {
-        yield MessageModel_1.messageSchema.findOneAndRemove({ _id, owner: user });
+        yield MessageModel_1.messageSchema.findOneAndRemove({ _id, userId });
         return res.status(200).json({ msg: 'Sucesfully deleted!' });
     }
     catch (err) {

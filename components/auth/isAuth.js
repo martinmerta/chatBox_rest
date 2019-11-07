@@ -6,7 +6,7 @@ exports.isAuth = (req, res, next) => {
     let decodedToken;
     try {
         if (token) {
-            decodedToken = jsonwebtoken_1.verify(token.split(' ')[1], 'superSecret');
+            decodedToken = jsonwebtoken_1.verify(token.split(' ')[1], 'supersecret');
         }
         else {
             throw new Error('Not authenticated!!');

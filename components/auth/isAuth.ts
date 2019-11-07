@@ -11,7 +11,7 @@ export const isAuth = (
   let decodedToken;
   try {
     if (token) {
-      decodedToken = verify(token.split(' ')[1], 'superSecret');
+      decodedToken = verify(token.split(' ')[1], 'supersecret');
     } else {
       throw new Error('Not authenticated!!');
     }
