@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { messageSchema } from './MessageModel';
-import { IRequestWithUser } from '../Interfaces';
+import { Request, Response, NextFunction } from "express";
+import { messageSchema } from "./MessageModel";
+import { IRequestWithUser } from "../Interfaces";
 export const getMessages = async (
   req: Request,
   res: Response,
@@ -20,13 +20,13 @@ export const postMessage = async (
 ) => {
   try {
     const { message } = req.body;
-    const { owner } = req.user;
+    const owner = req.user.userId;
     const newMessage = await new messageSchema({
       owner,
       message
     });
     await newMessage.save();
-    return res.status(201).json({ msg: 'Message succesfully created' });
+    return res.status(201).json({ msg: "Message succesfully created" });
   } catch (err) {
     return res.status(400).json({ msg: err });
   }
@@ -40,7 +40,7 @@ export const putMessage = async (
   const user = req.user;
   try {
     await messageSchema.findByIdAndUpdate({ _id, owner: user }, { message });
-    res.status(200).json({ msg: 'Message updated!' });
+    res.status(200).json({ msg: "Message updated!" });
   } catch (err) {
     return res.status(401).json({ msg: err });
   }
@@ -54,8 +54,8 @@ export const deleteMessage = async (
   const user = req.user;
   try {
     await messageSchema.findOneAndRemove({ _id, owner: user });
-    return res.status(200).json({ msg: 'Sucesfully deleted!' });
+    return res.status(200).json({ msg: "Sucesfully deleted!" });
   } catch (err) {
-    return res.status(400).json({ msg: 'deleted!!' });
+    return res.status(400).json({ msg: "deleted!!" });
   }
 };
