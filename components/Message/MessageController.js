@@ -22,38 +22,70 @@ exports.postMessage = (req, res, next) => __awaiter(this, void 0, void 0, functi
     try {
         const { message } = req.body;
         const userId = req.user;
-        const newMessage = yield new MessageModel_1.messageSchema({
-            userId,
-            message
-        });
-        yield newMessage.save();
-        return res.status(201).json({ msg: 'Message succesfully created' });
+        if (userId) {
+            const newMessage = yield new MessageModel_1.messageSchema({
+                userId,
+                message
+            });
+            yield newMessage.save();
+            return res.status(201).json({
+                msg: 'Message succesfully created',
+                msgId: newMessage._id.toString()
+            });
+        }
+        else {
+            return res.status(401).json({ msg: 'Not authorized' });
+        }
     }
     catch (err) {
-        return res.status(400).json({ msg: err });
+        return res.status(400).json({ msg: 'Upps Something gone wrong..' });
     }
 });
 exports.putMessage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-    const { message, _id } = req.body;
-    const userId = req.user;
-    console.log(message, _id, userId);
+    const { message, msgId } = req.body;
+    const user = req.user;
     try {
-        yield MessageModel_1.messageSchema.findByIdAndUpdate({ _id, userId }, { message });
-        res.status(200).json({ msg: 'Message updated!' });
+        if (user) {
+            const owner = yield MessageModel_1.messageSchema.findById({ _id: msgId });
+            if (owner && owner['userId'].toString() === user.toString()) {
+                yield MessageModel_1.messageSchema.findByIdAndUpdate({ _id: msgId }, { message });
+                return res.status(200).json({ msg: 'Message updated!' });
+            }
+            else {
+                return res
+                    .status(401)
+                    .json({ msg: 'Only owner of messsage can update it' });
+            }
+        }
+        else {
+            return res.status(401).json({ msg: 'Unauthorized' });
+        }
     }
     catch (err) {
         return res.status(401).json({ msg: err });
     }
 });
 exports.deleteMessage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-    const { _id } = req.body;
-    const userId = req.user;
-    console.log(_id, user);
+    const { msgId } = req.body;
+    const user = req.user;
     try {
-        yield MessageModel_1.messageSchema.findOneAndRemove({ _id, userId });
-        return res.status(200).json({ msg: 'Sucesfully deleted!' });
+        if (user) {
+            const owner = yield MessageModel_1.messageSchema.findById({ _id: msgId });
+            if (owner && owner['userId'].toString() === user.toString()) {
+                yield MessageModel_1.messageSchema.findByIdAndRemove({ _id: msgId });
+                return res.status(200).json({ msg: 'Message deleted!' });
+            }
+            else {
+                return res
+                    .status(401)
+                    .json({ msg: 'Only owner of messsage can delete it' });
+            }
+        }
+        else {
+            return res.status(401).json({ msg: 'Unauthorized' });
+        }
     }
     catch (err) {
-        return res.status(400).json({ msg: 'deleted!!' });
+        return res.status(401).json({ msg: err });
     }
 });

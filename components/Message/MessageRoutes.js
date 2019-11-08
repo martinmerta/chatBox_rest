@@ -9,5 +9,5 @@ const isAuth_1 = require("../auth/isAuth");
 exports.router = express_1.default.Router();
 exports.router.get('/message', MessageController_1.getMessages);
 exports.router.post('/message', isAuth_1.isAuth, MessageController_1.postMessage);
-exports.router.put('/message/:id', isAuth_1.isAuth, MessageController_1.putMessage);
-exports.router.delete('/message/:id', isAuth_1.isAuth, MessageController_1.deleteMessage);
+exports.router.put('/message', isAuth_1.isAuth, MessageController_1.putMessage);
+exports.router.delete('/message', isAuth_1.isAuth, MessageController_1.deleteMessage);

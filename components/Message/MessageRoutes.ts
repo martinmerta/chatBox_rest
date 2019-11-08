@@ -10,5 +10,5 @@ export const router = express.Router();
 
 router.get('/message', getMessages);
 router.post('/message', isAuth, postMessage);
-router.put('/message/:id', isAuth, putMessage);
-router.delete('/message/:id', isAuth, deleteMessage);
+router.put('/message', isAuth, putMessage);
+router.delete('/message', isAuth, deleteMessage);

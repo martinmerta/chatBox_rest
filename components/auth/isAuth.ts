@@ -13,14 +13,14 @@ export const isAuth = (
     if (token) {
       decodedToken = verify(token.split(' ')[1], 'supersecret');
     } else {
-      throw new Error('Not authenticated!!');
+      return res.status(401).json({ msg: 'Not authenticated!!' });
     }
     if (!decodedToken) {
-      throw new Error('Not authenticated!!');
+      return res.status(401).json({ msg: 'Not authenticated!!' });
     }
     req.user = decodedToken.userId;
   } catch (err) {
-    res.status(401).json(err);
+    return res.status(401).json({ msg: 'Unauthorized' });
   }
   next();
 };
