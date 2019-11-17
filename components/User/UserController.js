@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -12,7 +13,7 @@ const bcrypt_1 = require("bcrypt");
 const UserModel_1 = require("./UserModel");
 const jsonwebtoken_1 = require("jsonwebtoken");
 exports.getUser = (req, res, next) => { };
-exports.postUser = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+exports.postUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password, repeatPassword } = req.body;
     try {
         const ifExists = yield UserModel_1.userSchema.findOne({ email });
@@ -38,7 +39,7 @@ exports.postUser = (req, res, next) => __awaiter(this, void 0, void 0, function*
         return res.status(400).json({ msg: 'Ups something go wrong' });
     }
 });
-exports.logInUser = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+exports.logInUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     let loadedUser;
     try {
@@ -62,7 +63,7 @@ exports.logInUser = (req, res, next) => __awaiter(this, void 0, void 0, function
         return res.status(401).json({ msg: 'upps.. Something go wrong..' });
     }
 });
-exports.putUser = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+exports.putUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, oldPassword, newPassword, repeatNewPassword } = req.body;
     try {
         const user = yield UserModel_1.userSchema.findOne({ email });
@@ -87,7 +88,7 @@ exports.putUser = (req, res, next) => __awaiter(this, void 0, void 0, function* 
         return res.status(400).json({ msg: 'Something gone wrong..' });
     }
 });
-exports.deleteUser = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+exports.deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     const userId = req.user;
     console.log(userId);

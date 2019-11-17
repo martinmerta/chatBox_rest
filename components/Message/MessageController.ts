@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { messageSchema } from './MessageModel';
-import { IRequestWithUser } from '../Interfaces';
+import { Request, Response, NextFunction } from "express";
+import { messageSchema } from "./MessageModel";
+import { IRequestWithUser } from "../Interfaces";
 export const getMessages = async (
   req: Request,
   res: Response,
@@ -28,14 +28,14 @@ export const postMessage = async (
       });
       await newMessage.save();
       return res.status(201).json({
-        msg: 'Message succesfully created',
+        msg: "Message succesfully created",
         msgId: newMessage._id.toString()
       });
     } else {
-      return res.status(401).json({ msg: 'Not authorized' });
+      return res.status(401).json({ msg: "Unauthorized" });
     }
   } catch (err) {
-    return res.status(400).json({ msg: 'Upps Something gone wrong..' });
+    return res.status(400).json({ msg: "Upps Something gone wrong.." });
   }
 };
 export const putMessage = async (
@@ -48,16 +48,16 @@ export const putMessage = async (
   try {
     if (user) {
       const owner = await messageSchema.findById({ _id: msgId });
-      if (owner && owner['userId'].toString() === user.toString()) {
+      if (owner && owner["userId"].toString() === user.toString()) {
         await messageSchema.findByIdAndUpdate({ _id: msgId }, { message });
-        return res.status(200).json({ msg: 'Message updated!' });
+        return res.status(200).json({ msg: "Message updated!" });
       } else {
         return res
           .status(401)
-          .json({ msg: 'Only owner of messsage can update it' });
+          .json({ msg: "Only owner of messsage can update it" });
       }
     } else {
-      return res.status(401).json({ msg: 'Unauthorized' });
+      return res.status(401).json({ msg: "Unauthorized" });
     }
   } catch (err) {
     return res.status(401).json({ msg: err });
@@ -73,16 +73,16 @@ export const deleteMessage = async (
   try {
     if (user) {
       const owner = await messageSchema.findById({ _id: msgId });
-      if (owner && owner['userId'].toString() === user.toString()) {
+      if (owner && owner["userId"].toString() === user.toString()) {
         await messageSchema.findByIdAndRemove({ _id: msgId });
-        return res.status(200).json({ msg: 'Message deleted!' });
+        return res.status(200).json({ msg: "Message deleted!" });
       } else {
         return res
           .status(401)
-          .json({ msg: 'Only owner of messsage can delete it' });
+          .json({ msg: "Only owner of messsage can delete it" });
       }
     } else {
-      return res.status(401).json({ msg: 'Unauthorized' });
+      return res.status(401).json({ msg: "Unauthorized" });
     }
   } catch (err) {
     return res.status(401).json({ msg: err });
