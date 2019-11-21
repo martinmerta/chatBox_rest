@@ -20,7 +20,7 @@ exports.postUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (ifExists) {
             return res
                 .status(401)
-                .json({ msg: 'User with this email arleady exsists' });
+                .json({ msg: "User with this email arleady exsists" });
         }
         const hashedPw = yield bcrypt_1.hash(password, 10);
         if (email &&
@@ -29,14 +29,14 @@ exports.postUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             password.toString() === repeatPassword.toString()) {
             const user = yield new UserModel_1.userSchema({ email, password: hashedPw });
             yield user.save();
-            return res.status(201).json({ msg: 'User Created!' });
+            return res.status(201).json({ msg: "User Created!" });
         }
         else {
-            return res.status(400).json({ msg: 'Invalid Input!' });
+            return res.status(400).json({ msg: "Invalid Input!" });
         }
     }
     catch (err) {
-        return res.status(400).json({ msg: 'Ups something go wrong' });
+        return res.status(400).json({ msg: "Ups something go wrong" });
     }
 });
 exports.logInUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -45,22 +45,22 @@ exports.logInUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     try {
         const user = yield UserModel_1.userSchema.findOne({ email });
         if (user) {
-            const comparePasswords = yield bcrypt_1.compare(password, user['password']);
+            const comparePasswords = yield bcrypt_1.compare(password, user["password"]);
             if (comparePasswords) {
                 loadedUser = user;
             }
             else {
-                return res.status(401).json({ msg: 'Wrong email or password' });
+                return res.status(401).json({ msg: "Wrong email or password" });
             }
         }
         else {
             return res.status(400).json({ msg: `Don't exsist!!` });
         }
-        const token = jsonwebtoken_1.sign({ email: loadedUser.email, userId: loadedUser._id.toString() }, 'supersecret', { expiresIn: '1h' });
+        const token = jsonwebtoken_1.sign({ email: loadedUser.email, userId: loadedUser._id.toString() }, "supersecret", { expiresIn: "1h" });
         return res.status(200).json({ token, userId: loadedUser._id.toString() });
     }
     catch (err) {
-        return res.status(401).json({ msg: 'upps.. Something go wrong..' });
+        return res.status(401).json({ msg: "upps.. Something go wrong.." });
     }
 });
 exports.putUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -68,24 +68,24 @@ exports.putUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     try {
         const user = yield UserModel_1.userSchema.findOne({ email });
         if (user) {
-            const comparePW = yield bcrypt_1.compare(user['password'], oldPassword);
+            const comparePW = yield bcrypt_1.compare(user["password"], oldPassword);
             if (comparePW && newPassword === repeatNewPassword) {
                 const hashedNewPw = bcrypt_1.hash(newPassword, 10);
                 yield UserModel_1.userSchema.findOneAndUpdate({ email }, { password: hashedNewPw });
-                return res.status(201).json({ msg: 'Password sucessfully changed!' });
+                return res.status(201).json({ msg: "Password sucessfully changed!" });
             }
             else {
-                return res.status(401).json({ msg: 'Invalid input!' });
+                return res.status(401).json({ msg: "Invalid input!" });
             }
         }
         else {
             return res
                 .status(401)
-                .json({ msg: 'We dont have that user in our database' });
+                .json({ msg: "We dont have that user in our database" });
         }
     }
     catch (err) {
-        return res.status(400).json({ msg: 'Something gone wrong..' });
+        return res.status(400).json({ msg: "Something gone wrong.." });
     }
 });
 exports.deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -95,10 +95,10 @@ exports.deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     try {
         const user = yield UserModel_1.userSchema.findOne({ _id: userId });
         if (user) {
-            const comparePW = yield bcrypt_1.compare(password, user['password']);
-            if (user['email'] === email && comparePW) {
+            const comparePW = yield bcrypt_1.compare(password, user["password"]);
+            if (user["email"] === email && comparePW) {
                 yield UserModel_1.userSchema.findOneAndDelete({ email });
-                return res.status(200).json({ msg: 'User Deleted' });
+                return res.status(200).json({ msg: "User Deleted" });
             }
             else {
                 return res

@@ -1,13 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
-import { hash, compare } from 'bcrypt';
-import { userSchema } from './UserModel';
-import { sign } from 'jsonwebtoken';
-import { IRequestWithUser } from '../Interfaces';
+import { Request, Response, NextFunction } from "express";
+import { hash, compare } from "bcrypt";
+import { userSchema } from "./UserModel";
+import { sign } from "jsonwebtoken";
+import { IRequestWithUser } from "../Interfaces";
+import { ValidatedRequest } from "express-joi-validation";
+import { IUserRequestSchema } from "../auth/validation";
 
 export const getUser = (req: Request, res: Response, next: NextFunction) => {};
 
 export const postUser = async (
-  req: Request,
+  req: ValidatedRequest<IUserRequestSchema>,
   res: Response,
   next: NextFunction
 ) => {
@@ -17,7 +19,7 @@ export const postUser = async (
     if (ifExists) {
       return res
         .status(401)
-        .json({ msg: 'User with this email arleady exsists' });
+        .json({ msg: "User with this email arleady exsists" });
     }
     const hashedPw = await hash(password, 10);
     if (
@@ -28,12 +30,12 @@ export const postUser = async (
     ) {
       const user = await new userSchema({ email, password: hashedPw });
       await user.save();
-      return res.status(201).json({ msg: 'User Created!' });
+      return res.status(201).json({ msg: "User Created!" });
     } else {
-      return res.status(400).json({ msg: 'Invalid Input!' });
+      return res.status(400).json({ msg: "Invalid Input!" });
     }
   } catch (err) {
-    return res.status(400).json({ msg: 'Ups something go wrong' });
+    return res.status(400).json({ msg: "Ups something go wrong" });
   }
 };
 
@@ -47,23 +49,23 @@ export const logInUser = async (
   try {
     const user = await userSchema.findOne({ email });
     if (user) {
-      const comparePasswords = await compare(password, user['password']);
+      const comparePasswords = await compare(password, user["password"]);
       if (comparePasswords) {
         loadedUser = user;
       } else {
-        return res.status(401).json({ msg: 'Wrong email or password' });
+        return res.status(401).json({ msg: "Wrong email or password" });
       }
     } else {
       return res.status(400).json({ msg: `Don't exsist!!` });
     }
     const token = sign(
       { email: loadedUser.email, userId: loadedUser._id.toString() },
-      'supersecret',
-      { expiresIn: '1h' }
+      "supersecret",
+      { expiresIn: "1h" }
     );
     return res.status(200).json({ token, userId: loadedUser._id.toString() });
   } catch (err) {
-    return res.status(401).json({ msg: 'upps.. Something go wrong..' });
+    return res.status(401).json({ msg: "upps.. Something go wrong.." });
   }
 };
 
@@ -76,21 +78,21 @@ export const putUser = async (
   try {
     const user = await userSchema.findOne({ email });
     if (user) {
-      const comparePW = await compare(user['password'], oldPassword);
+      const comparePW = await compare(user["password"], oldPassword);
       if (comparePW && newPassword === repeatNewPassword) {
         const hashedNewPw = hash(newPassword, 10);
         await userSchema.findOneAndUpdate({ email }, { password: hashedNewPw });
-        return res.status(201).json({ msg: 'Password sucessfully changed!' });
+        return res.status(201).json({ msg: "Password sucessfully changed!" });
       } else {
-        return res.status(401).json({ msg: 'Invalid input!' });
+        return res.status(401).json({ msg: "Invalid input!" });
       }
     } else {
       return res
         .status(401)
-        .json({ msg: 'We dont have that user in our database' });
+        .json({ msg: "We dont have that user in our database" });
     }
   } catch (err) {
-    return res.status(400).json({ msg: 'Something gone wrong..' });
+    return res.status(400).json({ msg: "Something gone wrong.." });
   }
 };
 export const deleteUser = async (
@@ -104,10 +106,10 @@ export const deleteUser = async (
   try {
     const user = await userSchema.findOne({ _id: userId });
     if (user) {
-      const comparePW = await compare(password, user['password']);
-      if (user['email'] === email && comparePW) {
+      const comparePW = await compare(password, user["password"]);
+      if (user["email"] === email && comparePW) {
         await userSchema.findOneAndDelete({ email });
-        return res.status(200).json({ msg: 'User Deleted' });
+        return res.status(200).json({ msg: "User Deleted" });
       } else {
         return res
           .status(401)
