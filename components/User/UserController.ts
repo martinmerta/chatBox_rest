@@ -4,7 +4,12 @@ import { userSchema } from "./UserModel";
 import { sign } from "jsonwebtoken";
 import { IRequestWithUser } from "../Interfaces";
 import { ValidatedRequest } from "express-joi-validation";
-import { IUserRequestSchema } from "../auth/validation";
+import {
+  IUserRequestSchema,
+  IUserLogInRequestSchema,
+  IPutRequestSchema,
+  IDeleteUserRequestSchema
+} from "../auth/validation";
 
 export const getUser = (req: Request, res: Response, next: NextFunction) => {};
 
@@ -40,7 +45,7 @@ export const postUser = async (
 };
 
 export const logInUser = async (
-  req: Request,
+  req: ValidatedRequest<IUserLogInRequestSchema>,
   res: Response,
   next: NextFunction
 ) => {
@@ -70,7 +75,7 @@ export const logInUser = async (
 };
 
 export const putUser = async (
-  req: Request,
+  req: ValidatedRequest<IPutRequestSchema>,
   res: Response,
   next: NextFunction
 ) => {
@@ -96,13 +101,12 @@ export const putUser = async (
   }
 };
 export const deleteUser = async (
-  req: IRequestWithUser,
+  req: ValidatedRequest<IDeleteUserRequestSchema>,
   res: Response,
   next: NextFunction
 ) => {
   const { email, password } = req.body;
-  const userId = req.user;
-  console.log(userId);
+  const userId = req["user"];
   try {
     const user = await userSchema.findOne({ _id: userId });
     if (user) {
