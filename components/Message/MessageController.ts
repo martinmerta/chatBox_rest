@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { messageSchema } from "./MessageModel";
 import { IRequestWithUser } from "../Interfaces";
+import { ValidatedRequest } from "express-joi-validation";
+import { IpostMessageSchema, IputMessageSchema } from "../auth/validation";
 export const getMessages = async (
   req: Request,
   res: Response,
@@ -14,13 +16,13 @@ export const getMessages = async (
   }
 };
 export const postMessage = async (
-  req: IRequestWithUser,
+  req: ValidatedRequest<IpostMessageSchema>,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const { message } = req.body;
-    const userId = req.user;
+    const userId = req["user"];
     if (userId) {
       const newMessage = await new messageSchema({
         userId,
@@ -39,12 +41,12 @@ export const postMessage = async (
   }
 };
 export const putMessage = async (
-  req: IRequestWithUser,
+  req: ValidatedRequest<IputMessageSchema>,
   res: Response,
   next: NextFunction
 ) => {
   const { message, msgId } = req.body;
-  const user = req.user;
+  const user = req["user"];
   try {
     if (user) {
       const owner = await messageSchema.findById({ _id: msgId });

@@ -22,7 +22,7 @@ exports.getMessages = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 exports.postMessage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { message } = req.body;
-        const userId = req.user;
+        const userId = req["user"];
         if (userId) {
             const newMessage = yield new MessageModel_1.messageSchema({
                 userId,
@@ -44,7 +44,7 @@ exports.postMessage = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 });
 exports.putMessage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { message, msgId } = req.body;
-    const user = req.user;
+    const user = req["user"];
     try {
         if (user) {
             const owner = yield MessageModel_1.messageSchema.findById({ _id: msgId });

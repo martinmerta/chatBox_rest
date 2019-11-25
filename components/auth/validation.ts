@@ -8,6 +8,7 @@ import {
   createValidator
 } from "express-joi-validation";
 import { IRequestWithUser } from "../Interfaces/requestWithUser";
+import { string } from "joi";
 export const validator = createValidator();
 
 export const userSchema = Joi.object({
@@ -70,5 +71,31 @@ export interface IDeleteUserRequestSchema extends ValidatedRequestSchema {
   };
   user: {
     userId: unknown;
+  };
+}
+export const postMessageSchema = Joi.object({
+  body: {
+    message: Joi.string()
+      .required()
+      .min(1)
+  }
+});
+export interface IpostMessageSchema extends ValidatedRequestSchema {
+  body: {
+    message: string;
+  };
+}
+export const putMessageSchema = Joi.object({
+  body: {
+    message: Joi.string()
+      .required()
+      .min(1),
+    msgId: Joi.string().required()
+  }
+});
+export interface IputMessageSchema extends ValidatedRequestSchema {
+  body: {
+    message: string;
+    msgId: string;
   };
 }

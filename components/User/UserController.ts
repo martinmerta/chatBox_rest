@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { hash, compare } from "bcrypt";
 import { userSchema } from "./UserModel";
 import { sign } from "jsonwebtoken";
-import { IRequestWithUser } from "../Interfaces";
+//import { IRequestWithUser } from "../Interfaces";
 import { ValidatedRequest } from "express-joi-validation";
 import {
   IUserRequestSchema,

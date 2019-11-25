@@ -90,8 +90,7 @@ exports.putUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 });
 exports.deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
-    const userId = req.user;
-    console.log(userId);
+    const userId = req["user"];
     try {
         const user = yield UserModel_1.userSchema.findOne({ _id: userId });
         if (user) {
